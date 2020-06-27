@@ -32,8 +32,9 @@ type RelayControl struct {
 // TurnOn turns the relay with :id on
 func (rc *RelayControl) TurnOn(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-
-	relay, ok := rc.relays[vars["id"]]
+	id := vars["id"]
+	log.Printf("Turn on %s\n", id)
+	relay, ok := rc.relays[id]
 	if ok {
 		if err := relay.On(); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -49,8 +50,9 @@ func (rc *RelayControl) TurnOn(w http.ResponseWriter, r *http.Request) {
 // TurnOff turns the relay with :id off
 func (rc *RelayControl) TurnOff(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-
-	relay, ok := rc.relays[vars["id"]]
+	id := vars["id"]
+	log.Printf("Turn off %s\n", id)
+	relay, ok := rc.relays[id]
 	if ok {
 		if err := relay.Off(); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -66,12 +68,15 @@ func (rc *RelayControl) TurnOff(w http.ResponseWriter, r *http.Request) {
 // RelayStatus returns the given id's status
 func (rc *RelayControl) RelayStatus(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	id := vars["id"]
 
-	relay, ok := rc.relays[vars["id"]]
+	relay, ok := rc.relays[id]
 	if ok {
 		if relay.Status() {
+			log.Printf("Status for %s: %d\n", id, 1)
 			fmt.Fprint(w, "1")
 		} else {
+			log.Printf("Status for %s: %d\n", id, 0)
 			fmt.Fprint(w, "0")
 		}
 		return
