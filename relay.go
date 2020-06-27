@@ -22,8 +22,7 @@ func NewRelay(rpi *raspi.Adaptor, onOffPin int) *Relay {
 
 // Status returns true if the relay is on
 func (relay *Relay) Status() bool {
-	// TODO
-	return false
+	return relay.relayDriver.State()
 }
 
 // On turns the relay on
